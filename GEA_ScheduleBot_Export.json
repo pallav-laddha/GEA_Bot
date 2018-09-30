@@ -1,0 +1,1840 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0",
+    "importType": "LEX",
+    "importFormat": "JSON"
+  },
+  "resource": {
+    "name": "GEA_ScheduleBot",
+    "version": "5",
+    "intents": [
+      {
+        "description": "Intent to book a dentist's appointment",
+        "rejectionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Okay, I will not schedule an appointment."
+            }
+          ]
+        },
+        "name": "MakeAppointment",
+        "version": "45",
+        "fulfillmentActivity": {
+          "type": "CodeHook",
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:962920287137:function:Dynamo",
+            "messageVersion": "1.0"
+          }
+        },
+        "sampleUtterances": [
+          "I would like to book an appointment",
+          "Book an appointment",
+          "i need help",
+          "schedule",
+          "help",
+          "book service call",
+          "service call"
+        ],
+        "slots": [
+          {
+            "name": "Address",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.StreetAddress",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is you Address?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 16,
+            "sampleUtterances": []
+          },
+          {
+            "name": "AppointmentType",
+            "description": "The type of appointment being scheduled",
+            "slotConstraint": "Required",
+            "slotType": "AppointmentTypeValue",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What type of appliance you need help with?"
+                }
+              ],
+              "maxAttempts": 2,
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\",\"genericAttachments\":[{\"imageUrl\":\"https://www.geappliances.com/assets/images/home/home_microwaves.jpg\",\"title\":\"MICROWAVES\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/home/home_dishwashers.jpg\",\"title\":\"DISHWASHERS\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/home/home_washers.jpg\",\"title\":\"WASHERS\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/home/home_wallovens.jpg\",\"title\":\"WALL OVENS\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/products/dishwashers-under_the_sink.jpg\",\"title\":\"Dishwashers\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/products/dryers-electric.jpg\",\"title\":\"Dryer\",\"buttons\":[]},{\"imageUrl\":\"https://www.geappliances.com/assets/images/home/home_refrigerator.jpg\",\"title\":\"REFRIGERATORS\",\"buttons\":[]}]}"
+            },
+            "priority": 4,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Date",
+            "description": "The date to schedule the appointment",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.DATE",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "When should I schedule your appointment?"
+                },
+                {
+                  "contentType": "PlainText",
+                  "content": "When should I schedule your {AppointmentType}?"
+                },
+                {
+                  "contentType": "PlainText",
+                  "content": "{Time} on what day?"
+                },
+                {
+                  "contentType": "PlainText",
+                  "content": "A {AppointmentType} will take about [ExpectedDuration] minutes. What day works best for you?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 11,
+            "sampleUtterances": []
+          },
+          {
+            "name": "email",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.EmailAddress",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is your email address?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Issue",
+            "slotConstraint": "Required",
+            "slotType": "issue",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is the issue with the application?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 10,
+            "sampleUtterances": []
+          },
+          {
+            "name": "ModelId",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.Movie",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "what is the Model Number?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 7,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Name",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.Person",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "what is your name?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "sampleUtterances": []
+          },
+          {
+            "name": "PhoneNumber",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.PhoneNumber",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is you phone number?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "sampleUtterances": []
+          },
+          {
+            "name": "PINcode",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.PostalAddress",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is your PIN code?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 15,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Serial_Number",
+            "slotConstraint": "Required",
+            "slotType": "Serial_Number",
+            "slotTypeVersion": "1",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "what is the Serial Number?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 9,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Time",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.TIME",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "At what time would you like the appointment?"
+                }
+              ],
+              "maxAttempts": 2,
+              "responseCard": "{\"version\":1,\"contentType\":\"application/vnd.amazonaws.card.generic\"}"
+            },
+            "priority": 14,
+            "sampleUtterances": []
+          },
+          {
+            "name": "TrackId",
+            "slotConstraint": "Optional",
+            "slotType": "AMAZON.Movie",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "what is the Model Number?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 17,
+            "sampleUtterances": []
+          }
+        ],
+        "confirmationPrompt": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "{Time} is available, should I go ahead and book your appointment?"
+            },
+            {
+              "contentType": "PlainText",
+              "content": "[formattedTime] is available, should I go ahead and book your {AppointmentType}?"
+            }
+          ],
+          "maxAttempts": 2
+        }
+      },
+      {
+        "rejectionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Okay, I will not schedule an appointment."
+            }
+          ]
+        },
+        "name": "ModifyBooking",
+        "version": "6",
+        "fulfillmentActivity": {
+          "type": "CodeHook",
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:962920287137:function:Modify_dynamo",
+            "messageVersion": "1.0"
+          }
+        },
+        "sampleUtterances": [
+          "I want to change time on my booking",
+          "I want to modify booking",
+          "i want to modify appointment",
+          "change appointment",
+          "modify"
+        ],
+        "slots": [
+          {
+            "name": "Date",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.DATE",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What date do you want your appointment?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 2,
+            "sampleUtterances": []
+          },
+          {
+            "name": "ID",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.Movie",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is your track-id?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "sampleUtterances": []
+          },
+          {
+            "name": "Time",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.TIME",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What time do you want your appointment?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 3,
+            "sampleUtterances": []
+          }
+        ],
+        "confirmationPrompt": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "{Time} is available, should I go ahead and book your appointment?"
+            }
+          ],
+          "maxAttempts": 3
+        },
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Your appointment has been modified to {Date} at {Time}"
+            }
+          ]
+        }
+      },
+      {
+        "name": "welcome",
+        "version": "8",
+        "fulfillmentActivity": {
+          "type": "ReturnIntent"
+        },
+        "sampleUtterances": [
+          "hello",
+          "hi",
+          "you there",
+          "anyone there"
+        ],
+        "slots": [],
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "hi"
+            },
+            {
+              "contentType": "PlainText",
+              "content": "hello"
+            },
+            {
+              "contentType": "PlainText",
+              "content": "i am a service appointment scheduler bot"
+            }
+          ]
+        }
+      },
+      {
+        "rejectionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Your appointment will not be canceled."
+            }
+          ]
+        },
+        "name": "CancelAppointment",
+        "version": "6",
+        "fulfillmentActivity": {
+          "type": "CodeHook",
+          "codeHook": {
+            "uri": "arn:aws:lambda:us-east-1:962920287137:function:Cancel_dynamo",
+            "messageVersion": "1.0"
+          }
+        },
+        "sampleUtterances": [
+          "i want to cancel my appointment",
+          "cancel appointment",
+          "delete appointment",
+          "cancel"
+        ],
+        "slots": [
+          {
+            "name": "Track_id",
+            "slotConstraint": "Required",
+            "slotType": "AMAZON.Movie",
+            "valueElicitationPrompt": {
+              "messages": [
+                {
+                  "contentType": "PlainText",
+                  "content": "What is your track id?"
+                }
+              ],
+              "maxAttempts": 2
+            },
+            "priority": 1,
+            "sampleUtterances": []
+          }
+        ],
+        "confirmationPrompt": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Are you sure you want to cancel the appointment?"
+            }
+          ],
+          "maxAttempts": 3
+        },
+        "conclusionStatement": {
+          "messages": [
+            {
+              "contentType": "PlainText",
+              "content": "Your appointment has been canceled"
+            }
+          ]
+        }
+      }
+    ],
+    "slotTypes": [
+      {
+        "description": "issue with the application",
+        "name": "issue",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "cable damage",
+            "synonyms": []
+          },
+          {
+            "value": "power failure",
+            "synonyms": []
+          },
+          {
+            "value": "button failure",
+            "synonyms": []
+          },
+          {
+            "value": "breakdown",
+            "synonyms": []
+          },
+          {
+            "value": "damaged",
+            "synonyms": []
+          },
+          {
+            "value": "out of service",
+            "synonyms": []
+          },
+          {
+            "value": "not starting",
+            "synonyms": []
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "name": "Serial_Number",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "FZIN9813"
+          },
+          {
+            "value": "FZIN9814"
+          },
+          {
+            "value": "FZIN9811"
+          },
+          {
+            "value": "FZIN9812"
+          },
+          {
+            "value": "FZIN9817"
+          },
+          {
+            "value": "FZIN9818"
+          },
+          {
+            "value": "FZIN9815"
+          },
+          {
+            "value": "FZIN9816"
+          },
+          {
+            "value": "FZIN9810"
+          },
+          {
+            "value": "FZIN9809"
+          },
+          {
+            "value": "WOPK2238"
+          },
+          {
+            "value": "WOPK2239"
+          },
+          {
+            "value": "WOPK2236"
+          },
+          {
+            "value": "WOPK2237"
+          },
+          {
+            "value": "WOPK2234"
+          },
+          {
+            "value": "WOPK2235"
+          },
+          {
+            "value": "RFAZ3364"
+          },
+          {
+            "value": "RFAZ3363"
+          },
+          {
+            "value": "RFAZ3362"
+          },
+          {
+            "value": "RFAZ3361"
+          },
+          {
+            "value": "RFAZ3368"
+          },
+          {
+            "value": "RFAZ3367"
+          },
+          {
+            "value": "RFAZ3366"
+          },
+          {
+            "value": "RFAZ3365"
+          },
+          {
+            "value": "DHRT5690"
+          },
+          {
+            "value": "ACZN9024"
+          },
+          {
+            "value": "DHRT5691"
+          },
+          {
+            "value": "ACZN9023"
+          },
+          {
+            "value": "ACZN9022"
+          },
+          {
+            "value": "ACZN9021"
+          },
+          {
+            "value": "RFAZ3360"
+          },
+          {
+            "value": "ACZN9020"
+          },
+          {
+            "value": "DHRT5687"
+          },
+          {
+            "value": "DHRT5688"
+          },
+          {
+            "value": "DHRT5685"
+          },
+          {
+            "value": "DHRT5686"
+          },
+          {
+            "value": "ACZN9029"
+          },
+          {
+            "value": "DHRT5683"
+          },
+          {
+            "value": "ACZN9028"
+          },
+          {
+            "value": "DHRT5684"
+          },
+          {
+            "value": "ACZN9027"
+          },
+          {
+            "value": "DHRT5681"
+          },
+          {
+            "value": "ACZN9026"
+          },
+          {
+            "value": "DHRT5682"
+          },
+          {
+            "value": "ACZN9025"
+          },
+          {
+            "value": "RFAZ3369"
+          },
+          {
+            "value": "DHRT5689"
+          },
+          {
+            "value": "RFAZ3375"
+          },
+          {
+            "value": "RFAZ3374"
+          },
+          {
+            "value": "RFAZ3373"
+          },
+          {
+            "value": "RFAZ3372"
+          },
+          {
+            "value": "RFAZ3379"
+          },
+          {
+            "value": "RFAZ3378"
+          },
+          {
+            "value": "RFAZ3377"
+          },
+          {
+            "value": "RFAZ3376"
+          },
+          {
+            "value": "ACZN9013"
+          },
+          {
+            "value": "DHRT5680"
+          },
+          {
+            "value": "ACZN9012"
+          },
+          {
+            "value": "ACZN9011"
+          },
+          {
+            "value": "ACZN9010"
+          },
+          {
+            "value": "RFAZ3371"
+          },
+          {
+            "value": "RFAZ3370"
+          },
+          {
+            "value": "DHRT5676"
+          },
+          {
+            "value": "DHRT5677"
+          },
+          {
+            "value": "DHRT5674"
+          },
+          {
+            "value": "ACZN9019"
+          },
+          {
+            "value": "DHRT5675"
+          },
+          {
+            "value": "ACZN9018"
+          },
+          {
+            "value": "DHRT5672"
+          },
+          {
+            "value": "ACZN9017"
+          },
+          {
+            "value": "DHRT5673"
+          },
+          {
+            "value": "ACZN9016"
+          },
+          {
+            "value": "DHRT5670"
+          },
+          {
+            "value": "ACZN9015"
+          },
+          {
+            "value": "DHRT5671"
+          },
+          {
+            "value": "ACZN9014"
+          },
+          {
+            "value": "DHRT5678"
+          },
+          {
+            "value": "DHRT5679"
+          },
+          {
+            "value": "RFAZ3386"
+          },
+          {
+            "value": "RFAZ3385"
+          },
+          {
+            "value": "RFAZ3384"
+          },
+          {
+            "value": "RFAZ3383"
+          },
+          {
+            "value": "RFAZ3389"
+          },
+          {
+            "value": "RFAZ3388"
+          },
+          {
+            "value": "RFAZ3387"
+          },
+          {
+            "value": "ACZN9002"
+          },
+          {
+            "value": "RFAZ3382"
+          },
+          {
+            "value": "RFAZ3381"
+          },
+          {
+            "value": "RFAZ3380"
+          },
+          {
+            "value": "ACZN9009"
+          },
+          {
+            "value": "ACZN9008"
+          },
+          {
+            "value": "ACZN9007"
+          },
+          {
+            "value": "ACZN9006"
+          },
+          {
+            "value": "ACZN9005"
+          },
+          {
+            "value": "ACZN9004"
+          },
+          {
+            "value": "ACZN9003"
+          },
+          {
+            "value": "RFAZ3397"
+          },
+          {
+            "value": "RFAZ3396"
+          },
+          {
+            "value": "RFAZ3395"
+          },
+          {
+            "value": "RFAZ3394"
+          },
+          {
+            "value": "RFAZ3399"
+          },
+          {
+            "value": "RFAZ3398"
+          },
+          {
+            "value": "RFAZ3393"
+          },
+          {
+            "value": "RFAZ3392"
+          },
+          {
+            "value": "RFAZ3391"
+          },
+          {
+            "value": "RFAZ3390"
+          },
+          {
+            "value": "DHRT5698"
+          },
+          {
+            "value": "DHRT5696"
+          },
+          {
+            "value": "DHRT5697"
+          },
+          {
+            "value": "DHRT5694"
+          },
+          {
+            "value": "DHRT5695"
+          },
+          {
+            "value": "DHRT5692"
+          },
+          {
+            "value": "DHRT5693"
+          },
+          {
+            "value": "ACZN9060"
+          },
+          {
+            "value": "ACZN9068"
+          },
+          {
+            "value": "ACZN9067"
+          },
+          {
+            "value": "ACZN9066"
+          },
+          {
+            "value": "ACZN9065"
+          },
+          {
+            "value": "ACZN9064"
+          },
+          {
+            "value": "ACZN9063"
+          },
+          {
+            "value": "ACZN9062"
+          },
+          {
+            "value": "ACZN9061"
+          },
+          {
+            "value": "DRBG0119"
+          },
+          {
+            "value": "DRBG0116"
+          },
+          {
+            "value": "DRBG0115"
+          },
+          {
+            "value": "DRBG0118"
+          },
+          {
+            "value": "DRBG0117"
+          },
+          {
+            "value": "ACZN9069"
+          },
+          {
+            "value": "DRBG0112"
+          },
+          {
+            "value": "DRBG0111"
+          },
+          {
+            "value": "DRBG0114"
+          },
+          {
+            "value": "DRBG0113"
+          },
+          {
+            "value": "DRBG0110"
+          },
+          {
+            "value": "ACZN9057"
+          },
+          {
+            "value": "ACZN9056"
+          },
+          {
+            "value": "ACZN9055"
+          },
+          {
+            "value": "ACZN9054"
+          },
+          {
+            "value": "ACZN9053"
+          },
+          {
+            "value": "ACZN9052"
+          },
+          {
+            "value": "ACZN9051"
+          },
+          {
+            "value": "ACZN9050"
+          },
+          {
+            "value": "DRBG0109"
+          },
+          {
+            "value": "DRBG0108"
+          },
+          {
+            "value": "DRBG0105"
+          },
+          {
+            "value": "DRBG0104"
+          },
+          {
+            "value": "DRBG0107"
+          },
+          {
+            "value": "ACZN9059"
+          },
+          {
+            "value": "DRBG0106"
+          },
+          {
+            "value": "ACZN9058"
+          },
+          {
+            "value": "DRBG0101"
+          },
+          {
+            "value": "DRBG0100"
+          },
+          {
+            "value": "DRBG0103"
+          },
+          {
+            "value": "DRBG0102"
+          },
+          {
+            "value": "ACZN9046"
+          },
+          {
+            "value": "ACZN9045"
+          },
+          {
+            "value": "ACZN9044"
+          },
+          {
+            "value": "ACZN9043"
+          },
+          {
+            "value": "ACZN9042"
+          },
+          {
+            "value": "ACZN9041"
+          },
+          {
+            "value": "ACZN9040"
+          },
+          {
+            "value": "ACZN9049"
+          },
+          {
+            "value": "ACZN9048"
+          },
+          {
+            "value": "ACZN9047"
+          },
+          {
+            "value": "ACZN9035"
+          },
+          {
+            "value": "ACZN9034"
+          },
+          {
+            "value": "ACZN9033"
+          },
+          {
+            "value": "ACZN9032"
+          },
+          {
+            "value": "ACZN9031"
+          },
+          {
+            "value": "ACZN9030"
+          },
+          {
+            "value": "ACZN9039"
+          },
+          {
+            "value": "ACZN9038"
+          },
+          {
+            "value": "ACZN9037"
+          },
+          {
+            "value": "ACZN9036"
+          },
+          {
+            "value": "DRBG0123"
+          },
+          {
+            "value": "DRBG0122"
+          },
+          {
+            "value": "DRBG0124"
+          },
+          {
+            "value": "DRBG0121"
+          },
+          {
+            "value": "DRBG0120"
+          },
+          {
+            "value": "RFAZ3401"
+          },
+          {
+            "value": "RFAZ3400"
+          },
+          {
+            "value": "MOOP6672"
+          },
+          {
+            "value": "MOOP6673"
+          },
+          {
+            "value": "MOOP6670"
+          },
+          {
+            "value": "MOOP6671"
+          },
+          {
+            "value": "MOOP6669"
+          },
+          {
+            "value": "MOOP6667"
+          },
+          {
+            "value": "MOOP6668"
+          },
+          {
+            "value": "MOOP6665"
+          },
+          {
+            "value": "MOOP6666"
+          },
+          {
+            "value": "MOOP6663"
+          },
+          {
+            "value": "MOOP6664"
+          },
+          {
+            "value": "RFAZ3405"
+          },
+          {
+            "value": "RFAZ3404"
+          },
+          {
+            "value": "RFAZ3403"
+          },
+          {
+            "value": "RFAZ3402"
+          },
+          {
+            "value": "RFAZ3409"
+          },
+          {
+            "value": "RFAZ3408"
+          },
+          {
+            "value": "RFAZ3407"
+          },
+          {
+            "value": "RFAZ3406"
+          },
+          {
+            "value": "RFAZ3412"
+          },
+          {
+            "value": "RFAZ3411"
+          },
+          {
+            "value": "RFAZ3410"
+          },
+          {
+            "value": "MOOP6683"
+          },
+          {
+            "value": "MOOP6684"
+          },
+          {
+            "value": "MOOP6681"
+          },
+          {
+            "value": "MOOP6682"
+          },
+          {
+            "value": "MOOP6680"
+          },
+          {
+            "value": "MOOP6678"
+          },
+          {
+            "value": "MOOP6679"
+          },
+          {
+            "value": "MOOP6676"
+          },
+          {
+            "value": "MOOP6677"
+          },
+          {
+            "value": "MOOP6674"
+          },
+          {
+            "value": "MOOP6675"
+          },
+          {
+            "value": "RFAZ3416"
+          },
+          {
+            "value": "RFAZ3415"
+          },
+          {
+            "value": "RFAZ3414"
+          },
+          {
+            "value": "RFAZ3413"
+          },
+          {
+            "value": "RFAZ3419"
+          },
+          {
+            "value": "RFAZ3418"
+          },
+          {
+            "value": "RFAZ3417"
+          },
+          {
+            "value": "RFAZ3423"
+          },
+          {
+            "value": "RFAZ3422"
+          },
+          {
+            "value": "RFAZ3421"
+          },
+          {
+            "value": "RFAZ3420"
+          },
+          {
+            "value": "MOOP6694"
+          },
+          {
+            "value": "MOOP6695"
+          },
+          {
+            "value": "MOOP6692"
+          },
+          {
+            "value": "MOOP6693"
+          },
+          {
+            "value": "MOOP6690"
+          },
+          {
+            "value": "MOOP6691"
+          },
+          {
+            "value": "MOOP6689"
+          },
+          {
+            "value": "MOOP6687"
+          },
+          {
+            "value": "MOOP6688"
+          },
+          {
+            "value": "MOOP6685"
+          },
+          {
+            "value": "MOOP6686"
+          },
+          {
+            "value": "RFAZ3424"
+          },
+          {
+            "value": "ACZN9071"
+          },
+          {
+            "value": "ACZN9070"
+          },
+          {
+            "value": "ACZN9075"
+          },
+          {
+            "value": "ACZN9074"
+          },
+          {
+            "value": "ACZN9073"
+          },
+          {
+            "value": "ACZN9072"
+          },
+          {
+            "value": "MOOP6698"
+          },
+          {
+            "value": "MOOP6699"
+          },
+          {
+            "value": "MOOP6696"
+          },
+          {
+            "value": "MOOP6697"
+          },
+          {
+            "value": "RFAZ3346"
+          },
+          {
+            "value": "RFAZ3345"
+          },
+          {
+            "value": "DHRT5665"
+          },
+          {
+            "value": "DHRT5666"
+          },
+          {
+            "value": "DHRT5663"
+          },
+          {
+            "value": "DHRT5664"
+          },
+          {
+            "value": "DHRT5661"
+          },
+          {
+            "value": "DHRT5662"
+          },
+          {
+            "value": "DHRT5660"
+          },
+          {
+            "value": "RFAZ3349"
+          },
+          {
+            "value": "RFAZ3348"
+          },
+          {
+            "value": "RFAZ3347"
+          },
+          {
+            "value": "DHRT5669"
+          },
+          {
+            "value": "DHRT5667"
+          },
+          {
+            "value": "DRBG0099"
+          },
+          {
+            "value": "DHRT5668"
+          },
+          {
+            "value": "DRBG0098"
+          },
+          {
+            "value": "RFAZ3353"
+          },
+          {
+            "value": "RFAZ3352"
+          },
+          {
+            "value": "RFAZ3351"
+          },
+          {
+            "value": "RFAZ3350"
+          },
+          {
+            "value": "RFAZ3357"
+          },
+          {
+            "value": "RFAZ3356"
+          },
+          {
+            "value": "RFAZ3355"
+          },
+          {
+            "value": "RFAZ3354"
+          },
+          {
+            "value": "DHRT5654"
+          },
+          {
+            "value": "DHRT5655"
+          },
+          {
+            "value": "RFAZ3359"
+          },
+          {
+            "value": "RFAZ3358"
+          },
+          {
+            "value": "DHRT5658"
+          },
+          {
+            "value": "DHRT5659"
+          },
+          {
+            "value": "DHRT5656"
+          },
+          {
+            "value": "DHRT5657"
+          },
+          {
+            "value": "WOPK2261"
+          },
+          {
+            "value": "WOPK2262"
+          },
+          {
+            "value": "WOPK2260"
+          },
+          {
+            "value": "WSHY3323"
+          },
+          {
+            "value": "WSHY3324"
+          },
+          {
+            "value": "WSHY3322"
+          },
+          {
+            "value": "MOOP6702"
+          },
+          {
+            "value": "MOOP6703"
+          },
+          {
+            "value": "MOOP6700"
+          },
+          {
+            "value": "WSHY3329"
+          },
+          {
+            "value": "MOOP6701"
+          },
+          {
+            "value": "WSHY3327"
+          },
+          {
+            "value": "WSHY3328"
+          },
+          {
+            "value": "WSHY3325"
+          },
+          {
+            "value": "WSHY3326"
+          },
+          {
+            "value": "WOPK2269"
+          },
+          {
+            "value": "WOPK2267"
+          },
+          {
+            "value": "MOOP6708"
+          },
+          {
+            "value": "WOPK2268"
+          },
+          {
+            "value": "MOOP6709"
+          },
+          {
+            "value": "WOPK2265"
+          },
+          {
+            "value": "MOOP6706"
+          },
+          {
+            "value": "WOPK2266"
+          },
+          {
+            "value": "MOOP6707"
+          },
+          {
+            "value": "WOPK2263"
+          },
+          {
+            "value": "MOOP6704"
+          },
+          {
+            "value": "WOPK2264"
+          },
+          {
+            "value": "MOOP6705"
+          },
+          {
+            "value": "WOPK2272"
+          },
+          {
+            "value": "WOPK2273"
+          },
+          {
+            "value": "WOPK2270"
+          },
+          {
+            "value": "WOPK2271"
+          },
+          {
+            "value": "WSHY3334"
+          },
+          {
+            "value": "WSHY3335"
+          },
+          {
+            "value": "WSHY3332"
+          },
+          {
+            "value": "WSHY3333"
+          },
+          {
+            "value": "WSHY3330"
+          },
+          {
+            "value": "WSHY3331"
+          },
+          {
+            "value": "MOOP6713"
+          },
+          {
+            "value": "MOOP6714"
+          },
+          {
+            "value": "MOOP6711"
+          },
+          {
+            "value": "MOOP6712"
+          },
+          {
+            "value": "WSHY3338"
+          },
+          {
+            "value": "MOOP6710"
+          },
+          {
+            "value": "WSHY3339"
+          },
+          {
+            "value": "WSHY3336"
+          },
+          {
+            "value": "WSHY3337"
+          },
+          {
+            "value": "WOPK2278"
+          },
+          {
+            "value": "MOOP6719"
+          },
+          {
+            "value": "WOPK2279"
+          },
+          {
+            "value": "WOPK2276"
+          },
+          {
+            "value": "MOOP6717"
+          },
+          {
+            "value": "WOPK2277"
+          },
+          {
+            "value": "MOOP6718"
+          },
+          {
+            "value": "WOPK2274"
+          },
+          {
+            "value": "MOOP6715"
+          },
+          {
+            "value": "WOPK2275"
+          },
+          {
+            "value": "MOOP6716"
+          },
+          {
+            "value": "WOPK2240"
+          },
+          {
+            "value": "WSHY3345"
+          },
+          {
+            "value": "WSHY3346"
+          },
+          {
+            "value": "WSHY3343"
+          },
+          {
+            "value": "WSHY3344"
+          },
+          {
+            "value": "WSHY3341"
+          },
+          {
+            "value": "WSHY3342"
+          },
+          {
+            "value": "WSHY3340"
+          },
+          {
+            "value": "MOOP6722"
+          },
+          {
+            "value": "MOOP6720"
+          },
+          {
+            "value": "WSHY3349"
+          },
+          {
+            "value": "MOOP6721"
+          },
+          {
+            "value": "WOPK2249"
+          },
+          {
+            "value": "WSHY3347"
+          },
+          {
+            "value": "WSHY3348"
+          },
+          {
+            "value": "WOPK2247"
+          },
+          {
+            "value": "WOPK2248"
+          },
+          {
+            "value": "WOPK2245"
+          },
+          {
+            "value": "WOPK2246"
+          },
+          {
+            "value": "WOPK2243"
+          },
+          {
+            "value": "WOPK2244"
+          },
+          {
+            "value": "WOPK2241"
+          },
+          {
+            "value": "WOPK2242"
+          },
+          {
+            "value": "FZIN9824"
+          },
+          {
+            "value": "WOPK2250"
+          },
+          {
+            "value": "FZIN9825"
+          },
+          {
+            "value": "WOPK2251"
+          },
+          {
+            "value": "FZIN9822"
+          },
+          {
+            "value": "FZIN9823"
+          },
+          {
+            "value": "FZIN9826"
+          },
+          {
+            "value": "FZIN9827"
+          },
+          {
+            "value": "WSHY3356"
+          },
+          {
+            "value": "WSHY3357"
+          },
+          {
+            "value": "WSHY3354"
+          },
+          {
+            "value": "WSHY3355"
+          },
+          {
+            "value": "FZIN9820"
+          },
+          {
+            "value": "WSHY3352"
+          },
+          {
+            "value": "FZIN9821"
+          },
+          {
+            "value": "WSHY3353"
+          },
+          {
+            "value": "WSHY3350"
+          },
+          {
+            "value": "WSHY3351"
+          },
+          {
+            "value": "WSHY3358"
+          },
+          {
+            "value": "WSHY3359"
+          },
+          {
+            "value": "WOPK2258"
+          },
+          {
+            "value": "WOPK2259"
+          },
+          {
+            "value": "FZIN9819"
+          },
+          {
+            "value": "WOPK2256"
+          },
+          {
+            "value": "WOPK2257"
+          },
+          {
+            "value": "WOPK2254"
+          },
+          {
+            "value": "WOPK2255"
+          },
+          {
+            "value": "WOPK2252"
+          },
+          {
+            "value": "WOPK2253"
+          },
+          {
+            "value": "WSHY3360"
+          },
+          {
+            "value": "WSHY3367"
+          },
+          {
+            "value": "WSHY3368"
+          },
+          {
+            "value": "WSHY3365"
+          },
+          {
+            "value": "WSHY3366"
+          },
+          {
+            "value": "WSHY3363"
+          },
+          {
+            "value": "WSHY3364"
+          },
+          {
+            "value": "WSHY3361"
+          },
+          {
+            "value": "WSHY3362"
+          },
+          {
+            "value": "WSHY3369"
+          },
+          {
+            "value": "WSHY3370"
+          },
+          {
+            "value": "WSHY3371"
+          },
+          {
+            "value": "WSHY3378"
+          },
+          {
+            "value": "WSHY3379"
+          },
+          {
+            "value": "WSHY3376"
+          },
+          {
+            "value": "WSHY3377"
+          },
+          {
+            "value": "WSHY3374"
+          },
+          {
+            "value": "WSHY3375"
+          },
+          {
+            "value": "WSHY3372"
+          },
+          {
+            "value": "WSHY3373"
+          },
+          {
+            "value": "WOPK2283"
+          },
+          {
+            "value": "WSHY3381"
+          },
+          {
+            "value": "WOPK2284"
+          },
+          {
+            "value": "WSHY3382"
+          },
+          {
+            "value": "WOPK2281"
+          },
+          {
+            "value": "WOPK2282"
+          },
+          {
+            "value": "WSHY3380"
+          },
+          {
+            "value": "WOPK2280"
+          },
+          {
+            "value": "WSHY3383"
+          },
+          {
+            "value": "WOPK2289"
+          },
+          {
+            "value": "WOPK2287"
+          },
+          {
+            "value": "WOPK2288"
+          },
+          {
+            "value": "WOPK2285"
+          },
+          {
+            "value": "WOPK2286"
+          },
+          {
+            "value": "WOPK2292"
+          },
+          {
+            "value": "WOPK2290"
+          },
+          {
+            "value": "WOPK2291"
+          },
+          {
+            "value": "MOOP6661"
+          },
+          {
+            "value": "MOOP6662"
+          },
+          {
+            "value": "MOOP6660"
+          },
+          {
+            "value": "MOOP6658"
+          },
+          {
+            "value": "MOOP6659"
+          },
+          {
+            "value": "MOOP6656"
+          },
+          {
+            "value": "MOOP6657"
+          },
+          {
+            "value": "MOOP6654"
+          },
+          {
+            "value": "MOOP6655"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      },
+      {
+        "description": "Type of service appointment to schedule",
+        "name": "AppointmentTypeValue",
+        "version": "1",
+        "enumerationValues": [
+          {
+            "value": "cleaning"
+          },
+          {
+            "value": "whitening"
+          },
+          {
+            "value": "root canal"
+          }
+        ],
+        "valueSelectionStrategy": "ORIGINAL_VALUE"
+      }
+    ],
+    "voiceId": "Salli",
+    "childDirected": false,
+    "locale": "en-US",
+    "idleSessionTTLInSeconds": 600,
+    "description": "Bot to book a service appointment",
+    "clarificationPrompt": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "I didn't understand you, what would you like me to do?"
+        }
+      ],
+      "maxAttempts": 2
+    },
+    "abortStatement": {
+      "messages": [
+        {
+          "contentType": "PlainText",
+          "content": "Sorry, I am not able to assist at this time"
+        }
+      ]
+    }
+  }
+}
